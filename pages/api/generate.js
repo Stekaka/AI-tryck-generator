@@ -24,7 +24,10 @@ export default async function handler(req, res) {
   });
 
   const data = await response.json();
+  console.log("Replicate response från backend:", data);
 
-  // 👇 Här returneras bara ID:t – frontend sköter poll
+  if (!data.id) {
+    return res.status(500).json({ error: 'Replicate response saknar ID', fullResponse: data });
+  }
+
   res.status(200).json({ id: data.id });
-}
