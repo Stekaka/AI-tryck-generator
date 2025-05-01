@@ -23,23 +23,6 @@ export default async function handler(req, res) {
     })
   });
 
-  const prediction = await response.json();
-
-  let output = null;
-  while (!output || prediction.status !== 'succeeded') {
-    const poll = await fetch(`https://api.replicate.com/v1/predictions/${prediction.id}`, {
-      headers: { 'Authorization': `Token ${process.env.REPLICATE_API_TOKEN}` }
-    });
-    const data = await poll.json();
-    if (data.status === 'succeeded') {
-      output = data.output[0];
-      break;
-    }
-    if (data.status === 'failed') {
-      return res.status(500).json({ error: 'Generation failed' });
-    }
-    await new Promise(r => setTimeout(r, 1500));
-  }
-
-  res.status(200).json({ image: output });
+  const data = await response.json();
+  res.status(200).json({ id: data.id });
 }
