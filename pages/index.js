@@ -15,7 +15,16 @@ export default function Home() {
       body: JSON.stringify({ prompt })
     });
 
-    const { id } = await res.json();
+const data = await res.json();
+console.log("RESPONS FRÅN /api/generate:", data);
+
+const id = data.id;
+if (!id) {
+  alert("Kunde inte hämta ID från /api/generate. Se konsolen för detaljer.");
+  setLoading(false);
+  return;
+}
+
 
     let image = null;
     while (!image) {
